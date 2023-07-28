@@ -1,12 +1,19 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import Sidebar from "./Sidebar";
+import { PermanentSideBar } from "./PermanentSideBar";
 
 const Body = () => {
   return (
     <div className="flex">
-      <Sidebar />
-      <Outlet />
+      {/* Sidebar */}
+      <div className="w-fit">
+        <PermanentSideBar />
+      </div>
+
+      {/* Main Content */}
+      <div className="w-11/12">
+        <Outlet />
+      </div>
     </div>
   );
 };
