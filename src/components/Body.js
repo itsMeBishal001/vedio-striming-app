@@ -6,12 +6,12 @@ const Body = () => {
   return (
     <div className="flex">
       {/* Sidebar */}
-      <div className="w-fit">
+      <div className="w-fit mt-20">
         <PermanentSideBar />
       </div>
 
       {/* Main Content */}
-      <div className="w-11/12">
+      <div className=" mt-20 w-11/12">
         <Outlet />
       </div>
     </div>

@@ -1,7 +1,7 @@
 import { closeMenu } from "../utils/appSlice";
 import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const WatchPage = () => {
   const [searchParams] = useSearchParams();
