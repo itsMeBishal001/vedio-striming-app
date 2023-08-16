@@ -4,10 +4,15 @@ import { toggleMenu } from "../utils/appSlice";
 import Drawer from "react-modern-drawer";
 import "react-modern-drawer/dist/index.css";
 
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Link } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import { cacheResults } from "../utils/searchSlice";
-import { YOUTUBE_SEARCH_API } from "../utils/contants";
+import {
+  YOUTUBE_SEARCH_API,
+  YOUTUBE_SEARCH_VEDIO_1,
+  YOUTUBE_SEARCH_VEDIO_2,
+} from "../utils/contants";
+import { updateSearchVedioContainer } from "../utils/searchVedioSlice";
 
 const Head = () => {
   //here i will write code for the suggessions on search bar
@@ -15,6 +20,11 @@ const Head = () => {
   const [suggessions, setSuggessions] = useState([]);
   const [showSuggessions, setShowSuggessions] = useState(false);
   const searchCache = useSelector((store) => store.search);
+
+  //vedio results as per your queires
+  const [callQuery, setCallQuery] = useState(false);
+  const [searchvideos, setSearchVideos] = useState([]);
+
   const dispatch = useDispatch();
   /**
    *  searchCache = {
@@ -39,20 +49,18 @@ const Head = () => {
 
   const getSearchSugsestions = async () => {
     const data = await fetch(
-      "https://cors-anywhere-axpo.onrender.com/" +
+   
         YOUTUBE_SEARCH_API +
         searchQuery
     );
     const json = await data.json();
     setSuggessions(json[1]);
-    //update cahe
+    //update cache
 
     dispatch(
-      cacheResults(
-        cacheResults({
-          [searchQuery]: json[1],
-        })
-      )
+      cacheResults({
+        [searchQuery]: json[1],
+      })
     );
   };
 
@@ -63,8 +71,24 @@ const Head = () => {
     dispatch(toggleMenu());
   };
 
-  return (
+  // trying to result the search vedio on ui
+  useEffect(() => {
+    getSearchVedios();
+  }, [callQuery]);
+  const getSearchVedios = async () => {
+    const data = await fetch(
+      "https://cors-anywhere-axpo.onrender.com/" +
+        YOUTUBE_SEARCH_VEDIO_1 +
+        searchQuery +
+        YOUTUBE_SEARCH_VEDIO_2
+    );
+    const json = await data.json();
+    console.log(json?.items);
+    dispatch(updateSearchVedioContainer({ searchvideos: json?.items }));
+  };
 
+  return (
+    <BrowserRouter>
       <div className="grid grid-flow-col    shadow-lg items-center fixed top-0 left-0 w-full z-10 bg-white ">
         <div className="flex">
           <button>
@@ -80,27 +104,25 @@ const Head = () => {
             onClose={() => toggleMenuHandler()}
             direction="left"
           >
-            <BrowserRouter>
-              <div className="flex p-3 m-1">
-                <button>
-                  <img
-                    onClick={() => toggleMenuHandler()}
-                    className="w-6   cursor-pointer"
-                    alt="menu"
-                    src="https://www.svgrepo.com/show/506800/burger-menu.svg"
-                  />
-                </button>
+            <div className="flex p-3 m-1">
+              <button>
+                <img
+                  onClick={() => toggleMenuHandler()}
+                  className="w-6   cursor-pointer"
+                  alt="menu"
+                  src="https://www.svgrepo.com/show/506800/burger-menu.svg"
+                />
+              </button>
 
-                <a href="/">
-                  <img
-                    className="h-20"
-                    alt="youtube-logo"
-                    src="https://www.logo.wine/a/logo/YouTube/YouTube-Logo.wine.svg"
-                  />
-                </a>
-              </div>
-              <Sidebar />
-            </BrowserRouter>
+              <Link to="/">
+                <img
+                  className="h-20"
+                  alt="youtube-logo"
+                  src="https://www.logo.wine/a/logo/YouTube/YouTube-Logo.wine.svg"
+                />
+              </Link>
+            </div>
+            <Sidebar />
           </Drawer>
 
           <div>
@@ -123,9 +145,17 @@ const Head = () => {
               onFocus={() => setShowSuggessions(true)}
               onBlur={() => setShowSuggessions(false)}
             />
-            <button className="border border-gray-400 px-5 py-2 rounded-r-full bg-gray-100">
-              🔍
-            </button>
+            <Link to="/searchVedio">
+              <button
+                className="border border-gray-400 px-5 py-2 rounded-r-full bg-gray-100"
+                onClick={() => {
+                  setCallQuery(true);
+                }}
+                onBlur={() => setCallQuery(false)}
+              >
+                🔍
+              </button>
+            </Link>
           </div>
           <div className="relative pr-8 ml-6">
             {showSuggessions && (
@@ -151,8 +181,8 @@ const Head = () => {
             src="https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png"
           />
         </div>
-      </div>
-    
+      </div>{" "}
+    </BrowserRouter>
   );
 };
 

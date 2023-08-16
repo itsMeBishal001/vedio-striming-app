@@ -5,4 +5,10 @@ export const YOUTUBE_VIDEOS_API =
   GOOGLE_API_KEY;
 export const YOUTUBE_SEARCH_API =
   "https://clients1.google.com/complete/search?client=firefox&ds=yt&q=";
-  // "http://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q=";
+// "http://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q=";
+
+export const YOUTUBE_SEARCH_VEDIO_1 =
+  "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&q=";
+
+export const YOUTUBE_SEARCH_VEDIO_2 =
+  "&regionCode=IN&type=video&key=" + GOOGLE_API_KEY;
